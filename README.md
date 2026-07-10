@@ -1,5 +1,9 @@
 # mcp-postgresql
 
+[![Docker Publish](https://github.com/ferronicardoso/mcp-postgresql/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ferronicardoso/mcp-postgresql/actions/workflows/docker-publish.yml)
+[![GHCR](https://img.shields.io/badge/ghcr.io-mcp--postgresql-2496ED?logo=docker&logoColor=white)](https://github.com/ferronicardoso/mcp-postgresql/pkgs/container/mcp-postgresql)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](package.json)
+
 Production-oriented MCP server for PostgreSQL, exposing database operations to MCP clients (Claude Desktop, VS Code Copilot, Cursor, and compatible hosts).
 
 ## Features
@@ -41,6 +45,9 @@ Set connection settings using environment variables:
 | `PGSSL` (or `POSTGRES_SSL`) | No | `false` | Enables SSL/TLS |
 | `PGPOOL_MAX` | No | `10` | Max pool connections |
 | `PGPOOL_IDLE_TIMEOUT_MS` | No | `30000` | Pool idle timeout (ms) |
+| `MCP_TRANSPORT` | No | `stdio` | Transport mode: `stdio` (default, for `npx`/Claude Desktop/VS Code) or `http` (Streamable HTTP, for Docker/remote clients such as n8n) |
+| `MCP_HTTP_PORT` | No | `3002` | Port for the HTTP server (only used when `MCP_TRANSPORT=http`) |
+| `MCP_HTTP_HOST` | No | `0.0.0.0` | Bind address for the HTTP server (only used when `MCP_TRANSPORT=http`) |
 
 ## Usage
 
@@ -93,6 +100,23 @@ npx github:ferronicardoso/mcp-postgresql
   }
 }
 ```
+
+### Run with Docker (HTTP transport)
+
+The published image runs in Streamable HTTP mode by default, for use as a remote MCP endpoint (e.g. from n8n's MCP Client Tool node or any Streamable HTTP-compatible client):
+
+```bash
+docker run -d --name mcp-postgresql \
+  -p 3002:3002 \
+  -e PGHOST=host.docker.internal \
+  -e PGPORT=5432 \
+  -e PGDATABASE=postgres \
+  -e PGUSER=postgres \
+  -e PGPASSWORD=your-password \
+  ghcr.io/ferronicardoso/mcp-postgresql:latest
+```
+
+The MCP endpoint is then available at `http://localhost:3002/mcp`.
 
 ## Local Development
 
