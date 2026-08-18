@@ -1,4 +1,4 @@
-# mcp-postgresql
+# MCP Server for PostgreSQL
 
 [![Docker Publish](https://github.com/ferronicardoso/mcp-postgresql/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ferronicardoso/mcp-postgresql/actions/workflows/docker-publish.yml)
 [![GHCR](https://img.shields.io/badge/ghcr.io-mcp--postgresql-2496ED?logo=docker&logoColor=white)](https://github.com/ferronicardoso/mcp-postgresql/pkgs/container/mcp-postgresql)
@@ -73,6 +73,8 @@ claude mcp add postgresql --scope user -- npx -y github:ferronicardoso/mcp-postg
 
 Environment variables can be passed with repeated `--env KEY=VALUE` flags before the `--`, e.g.:
 
+**Bash (Linux/macOS/WSL):**
+
 ```bash
 claude mcp add postgresql --scope user \
   --env PGHOST=localhost \
@@ -82,6 +84,46 @@ claude mcp add postgresql --scope user \
   --env PGPASSWORD=your-password \
   -- npx -y github:ferronicardoso/mcp-postgresql
 ```
+
+**PowerShell:**
+
+```powershell
+claude mcp add postgresql --scope user `
+  --env PGHOST=localhost `
+  --env PGPORT=5432 `
+  --env PGDATABASE=postgres `
+  --env PGUSER=postgres `
+  --env PGPASSWORD=your-password `
+  -- npx -y github:ferronicardoso/mcp-postgresql
+```
+
+### Codex CLI
+
+**Bash (Linux/macOS/WSL):**
+
+```bash
+codex mcp add postgresql \
+  --env PGHOST=localhost \
+  --env PGPORT=5432 \
+  --env PGDATABASE=postgres \
+  --env PGUSER=postgres \
+  --env PGPASSWORD=your-password \
+  npx -- -y github:ferronicardoso/mcp-postgresql
+```
+
+**PowerShell:**
+
+```powershell
+codex mcp add postgresql `
+  --env PGHOST=localhost `
+  --env PGPORT=5432 `
+  --env PGDATABASE=postgres `
+  --env PGUSER=postgres `
+  --env PGPASSWORD=your-password `
+  npx -- -y github:ferronicardoso/mcp-postgresql
+```
+
+This registers the server in `~/.codex/config.toml`. To remove it, run `codex mcp remove postgresql`.
 
 ### Claude Desktop configuration
 
@@ -131,6 +173,8 @@ claude mcp add postgresql --scope user \
 
 The published image runs in Streamable HTTP mode by default, for use as a remote MCP endpoint (e.g. from n8n's MCP Client Tool node or any Streamable HTTP-compatible client):
 
+**Bash (Linux/macOS/WSL):**
+
 ```bash
 docker run -d --name mcp-postgresql \
   -p 3002:3002 \
@@ -139,6 +183,19 @@ docker run -d --name mcp-postgresql \
   -e PGDATABASE=postgres \
   -e PGUSER=postgres \
   -e PGPASSWORD=your-password \
+  ghcr.io/ferronicardoso/mcp-postgresql:latest
+```
+
+**PowerShell:**
+
+```powershell
+docker run -d --name mcp-postgresql `
+  -p 3002:3002 `
+  -e PGHOST=host.docker.internal `
+  -e PGPORT=5432 `
+  -e PGDATABASE=postgres `
+  -e PGUSER=postgres `
+  -e PGPASSWORD=your-password `
   ghcr.io/ferronicardoso/mcp-postgresql:latest
 ```
 
@@ -179,3 +236,7 @@ git add dist
 - Never commit real credentials or `.env` files.
 - Prefer least-privilege database users for production use.
 - For public or untrusted networks, enable encryption (`PGSSL=true`) and configure certificates appropriately.
+
+## License
+
+[MIT](LICENSE) © Raphael Augusto Ferroni Cardoso
